@@ -1,5 +1,6 @@
 // study guide https://drive.google.com/file/d/1Vw658-9KUiUZ5yHaABvkytC9W2QBYiW_/view
 
+// functions to show only the colors relevant to the theme
 function showJSPunsColors() {
   $('#color option').remove();
   $('#color').append(
@@ -61,37 +62,40 @@ $('#design').change(function() {
   }
 });
 
-let totalCost = 0;
-
 // append total
-$('.activities').append('<p><strong>Total: ' + totalCost + '</strong></p>');
+let totalCost = 0;
+const totalString = '<h2>Total: $</h2>';
+$('.activities').append(totalString);
 
-// disable conflicting time checkboxes when boxes are checked
-
-$('.activities').change(function() {
-  // disable conflicting 9am-12pm
-  if ($('input[name="js-frameworks"]').is(':checked')) {
-    $('input[name="express"]').attr('disabled', 'true');
+// convert string to number and display total of selected activities
+$('.activities').on('click', function(e) {
+  let $clicked = $(e.target);
+  let dataCost = $clicked.attr('data-cost');
+  dataCost = dataCost.replace(/\$/g, '');
+  dataCost = parseInt(dataCost, 10);
+  if ($(event.target).is(':checked')) {
+    totalCost += dataCost;
   } else {
-    $('input[name="express"]').removeAttr('disabled');
+    totalCost -= dataCost;
   }
+  $('h2').text(`Total: $ ${totalCost}`);
 
-  if ($('input[name="express"]').is(':checked')) {
-    $('input[name="js-frameworks"]').attr('disabled', 'true');
-  } else {
-    $('input[name="js-frameworks"]').removeAttr('disabled');
-  }
-
-  // disable conflicting 1pm-4pm
-  if ($('input[name="js-libs"]').is(':checked')) {
-    $('input[name="node"]').attr('disabled', 'true');
-  } else {
-    $('input[name="node"]').removeAttr('disabled');
-  }
-
-  if ($('input[name="node"]').is(':checked')) {
-    $('input[name="js-libs"]').attr('disabled', 'true');
-  } else {
-    $('input[name="js-libs"]').removeAttr('disabled');
+  // disable checkboxes of confliciting activities of selected checkboxes
+  let selectedDayAndTime = $clicked.attr('data-day-and-time');
+  const $checkbox = $('.activities input[type=checkbox]');
+  for (let i = 0; i < $checkbox.length; i += 1) {
+    let eventDayAndTime = $checkbox[i].getAttribute('data-day-and-time');
+    if (
+      eventDayAndTime === selectedDayAndTime &&
+      $(event.target).is(':checked')
+    ) {
+      $checkbox[i].disabled = true;
+      $clicked.prop('disabled', false);
+    } else if (!$(event.target).is(':checked')) {
+      $checkbox[i].disabled = false;
+    }
   }
 });
+
+// hide 'select payment method' option
+$('#payment [value="select method"]').attr('hidden', 'true');
