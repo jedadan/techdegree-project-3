@@ -1,17 +1,17 @@
 // study guide https://drive.google.com/file/d/1Vw658-9KUiUZ5yHaABvkytC9W2QBYiW_/view
 
-// add focus to the 'name' field on page load
+// add focus to the name input on page load
 $('#name').focus();
 
-// hide 'other' text input
+// hide other text input
 $('#other-title').hide();
 
-// show 'other' text input, when 'other' option is selected
+// show other text input, when other option is selected
 $('#title').change(function() {
   if ($(this).val() === 'other') {
-    $('#other-title').show();
+    $('#other-title').slideDown();
   } else {
-    $('#other-title').hide();
+    $('#other-title').slideUp();
   }
 });
 
@@ -40,10 +40,10 @@ function showHeartJSColors() {
   );
 }
 
-// hide 'select theme' option
+// hide select theme option
 $("option:contains('Select Theme')").attr('hidden', 'true');
 
-// insert 'Please select a T-shirt theme' before first child and hide option
+// insert Please select a T-shirt theme before first child and hide option
 $('#color').prepend(
   '<option value="theme-first">Please select a T-shirt theme</option>'
 );
@@ -62,21 +62,20 @@ $('#design').change(function() {
   }
 });
 
-// append total
+// add total to the bottom of activities
 let totalCost = 0;
 const totalString = '<h2>Total: $</h2>';
 $('.activities').append(totalString);
 
 // convert string to number and display total of selected activities
-$('.activities').on('click', function(e) {
-  let $clicked = $(e.target);
-  let dataCost = $clicked.attr('data-cost');
-  dataCost = dataCost.replace(/\$/g, '');
-  dataCost = parseInt(dataCost, 10);
-  if ($(event.target).is(':checked')) {
-    totalCost += dataCost;
+$('.activities input[type=checkbox').on('click', function(e) {
+  let $clicked = $(this);
+  let $dataCost = $clicked.attr('data-cost').replace('$', '');
+  $dataCost = parseInt($dataCost);
+  if ($clicked.is(':checked')) {
+    totalCost += $dataCost;
   } else {
-    totalCost -= dataCost;
+    totalCost -= $dataCost;
   }
   $('h2').text(`Total: $ ${totalCost}`);
 
@@ -97,7 +96,7 @@ $('.activities').on('click', function(e) {
   }
 });
 
-// hide 'select payment method' option
+// hide select payment method option
 $('#payment [value="select method"]').attr('hidden', 'true');
 
 // credit card option selected by default
@@ -107,7 +106,7 @@ $('#payment option[value="Credit Card"]').attr('selected', 'true');
 $('#paypal').hide();
 $('#bitcoin').hide();
 $('#payment').change(function(e) {
-  const paymentOption = this.target;
+  const paymentOption = $(this);
   if ($('#payment').val() === 'PayPal') {
     $('#credit-card').hide();
     $('#paypal').show();
@@ -187,7 +186,7 @@ function validActivity(activity) {
   }
 }
 
-$activity.on('click', function(e) {
+$activity.on('mouseleave', function(e) {
   validActivity(e.target.value);
 });
 
@@ -217,7 +216,7 @@ function validNumber(cardnumber) {
   }
 }
 
-$number.on('keypress blur', function(e) {
+$number.on('keyup blur', function(e) {
   validNumber(e.target.value);
 });
 
@@ -241,9 +240,70 @@ function validZip(zip) {
   } else {
     $('.zipError').show();
     $('.zipEmpty').hide();
+    return false;
   }
 }
 
-$zip.on('keypress blur', function(e) {
+$zip.on('keyup blur', function(e) {
   validZip(e.target.value);
+});
+
+// validation and errors for cvv input
+const $cvv = $('#cvv');
+$($cvv).after('<span class="cvvError">CVV must be 3 digits long</span>');
+$($cvv).after('<span class="cvvEmpty">Field cannot remain empty</span>');
+$('.cvvError').hide();
+$('.cvvEmpty').hide();
+
+function validCVV(cvv) {
+  let regexCVV = /^\d{3}$/.test(cvv);
+  if (regexCVV) {
+    $('.cvvError').hide();
+    $('.cvvEmpty').hide();
+    return true;
+  } else if (cvv === '') {
+    $('.cvvError').hide();
+    $('.cvvEmpty').show();
+    return false;
+  } else {
+    $('.cvvError').show();
+    $('.cvvEmpty').hide();
+    return false;
+  }
+}
+
+$cvv.on('keyup blur', function(e) {
+  validCVV(e.target.value);
+});
+
+// Master Validation checks that all inputs return true
+function masterValidation() {
+  let nameEmailActivity = [
+    validName($name.val()),
+    validEmail($email.val()),
+    validActivity($activity.val())
+  ];
+  let numberZipCVV = [
+    validNumber($number.val()),
+    validZip($zip.val()),
+    validCVV($cvv.val())
+  ];
+  if ($('#payment') === 'Credit Card') {
+    Array.prototype.push.apply(nameEmailActivity, numberZipCVV);
+  }
+  if (nameEmailActivity.includes(false)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// When form is submitted if all required fields are not complete will display error messages
+$('form').submit(function(e) {
+  if (!masterValidation()) {
+    e.preventDefault();
+  } else {
+    e.preventDefault();
+    console.log('Eureka!');
+  }
 });
