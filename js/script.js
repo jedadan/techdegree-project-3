@@ -124,15 +124,19 @@ $('#payment').change(function(e) {
 
 // validation and error for the name input
 const $name = $('#name');
-$($name).after('<span class="nameError">Please enter a valid name</span>');
+$($name).after(
+  '<span class="nameError error">Please enter a valid name</span>'
+);
 $('.nameError').hide();
 
 function validName(name) {
   if (name !== '') {
     $('.nameError').hide();
+    $('#name').removeClass('border-red');
     return true;
   } else {
     $('.nameError').show();
+    $('#name').addClass('border-red');
     return false;
   }
 }
@@ -143,8 +147,12 @@ $name.on('keypress blur', function(e) {
 
 // validation and errors for the email input
 const $email = $('#mail');
-$($email).after('<span class="emailError">Please enter a valid email</span>');
-$($email).after('<span class="emailEmpty">Field cannot remain empty</span>');
+$($email).after(
+  '<span class="emailError error">Please enter a valid email</span>'
+);
+$($email).after(
+  '<span class="emailEmpty error">Field cannot remain empty</span>'
+);
 $('.emailError').hide();
 $('.emailEmpty').hide();
 
@@ -153,14 +161,17 @@ function validEmail(email) {
   if (regexEmail) {
     $('.emailError').hide();
     $('.emailEmpty').hide();
+    $('#mail').removeClass('border-red');
     return true;
   } else if (email === '') {
     $('.emailError').hide();
     $('.emailEmpty').show();
+    $('#mail').addClass('border-red');
     return false;
   } else {
     $('.emailError').show();
     $('.emailEmpty').hide();
+    $('#mail').addClass('border-red');
     return false;
   }
 }
@@ -172,7 +183,7 @@ $email.on('keypress blur', function(e) {
 // validation and error for the activity options
 const $activity = $('.activities');
 $($('legend:contains("Register for Activities")')).after(
-  '<span class="activityError">Please select at least one activity</span>'
+  '<span class="activityError error">Please select at least one activity</span>'
 );
 $('.activityError').hide();
 
@@ -193,9 +204,11 @@ $activity.on('mouseleave', function(e) {
 // validation and errors for credit card number input
 const $number = $('#cc-num');
 $($number).after(
-  '<span class="numberError">Credit card number must be between 13 to 19 digits long</span>'
+  '<span class="numberError error">Credit card number must be between 13 to 19 digits long</span>'
 );
-$($number).after('<span class="numberEmpty">Field cannot remain empty</span>');
+$($number).after(
+  '<span class="numberEmpty error">Field cannot remain empty</span>'
+);
 $('.numberError').hide();
 $('.numberEmpty').hide();
 
@@ -204,14 +217,17 @@ function validNumber(cardnumber) {
   if (regexNumber) {
     $('.numberError').hide();
     $('.numberEmpty').hide();
+    $('#cc-num').removeClass('border-red');
     return true;
   } else if (cardnumber === '') {
     $('.numberError').hide();
     $('.numberEmpty').show();
+    $('#cc-num').addClass('border-red');
     return false;
   } else {
     $('.numberError').show();
     $('.numberEmpty').hide();
+    $('#cc-num').addClass('border-red');
     return false;
   }
 }
@@ -222,8 +238,10 @@ $number.on('keyup blur', function(e) {
 
 // validation and errors for zip code input
 const $zip = $('#zip');
-$($zip).after('<span class="zipError">Zip code must be 5 digits long</span>');
-$($zip).after('<span class="zipEmpty">Field cannot remain empty</span>');
+$($zip).after(
+  '<span class="zipError error">Zip code must be 5 digits long</span>'
+);
+$($zip).after('<span class="zipEmpty error">Field cannot remain empty</span>');
 $('.zipError').hide();
 $('.zipEmpty').hide();
 
@@ -232,14 +250,17 @@ function validZip(zip) {
   if (regexZip) {
     $('.zipError').hide();
     $('.zipEmpty').hide();
+    $('#zip').removeClass('border-red');
     return true;
   } else if (zip === '') {
     $('.zipError').hide();
     $('.zipEmpty').show();
+    $('#zip').addClass('border-red');
     return false;
   } else {
     $('.zipError').show();
     $('.zipEmpty').hide();
+    $('#zip').addClass('border-red');
     return false;
   }
 }
@@ -250,8 +271,8 @@ $zip.on('keyup blur', function(e) {
 
 // validation and errors for cvv input
 const $cvv = $('#cvv');
-$($cvv).after('<span class="cvvError">CVV must be 3 digits long</span>');
-$($cvv).after('<span class="cvvEmpty">Field cannot remain empty</span>');
+$($cvv).after('<span class="cvvError error">CVV must be 3 digits long</span>');
+$($cvv).after('<span class="cvvEmpty error">Field cannot remain empty</span>');
 $('.cvvError').hide();
 $('.cvvEmpty').hide();
 
@@ -260,14 +281,17 @@ function validCVV(cvv) {
   if (regexCVV) {
     $('.cvvError').hide();
     $('.cvvEmpty').hide();
+    $('#cvv').removeClass('border-red');
     return true;
   } else if (cvv === '') {
     $('.cvvError').hide();
     $('.cvvEmpty').show();
+    $('#cvv').addClass('border-red');
     return false;
   } else {
     $('.cvvError').show();
     $('.cvvEmpty').hide();
+    $('#cvv').addClass('border-red');
     return false;
   }
 }
