@@ -312,7 +312,7 @@ function masterValidation() {
     validZip($zip.val()),
     validCVV($cvv.val())
   ];
-  if ($('#payment') === 'Credit Card') {
+  if ($('#payment').val() === 'Credit Card') {
     Array.prototype.push.apply(nameEmailActivity, numberZipCVV);
   }
   if (nameEmailActivity.includes(false)) {
@@ -327,7 +327,6 @@ $('form').submit(function(e) {
   if (!masterValidation()) {
     e.preventDefault();
   } else {
-    e.preventDefault();
     console.log('Eureka!');
   }
 });
